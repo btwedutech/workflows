@@ -1,0 +1,42 @@
+name: Deploy to Kube
+
+on:
+  workflow_call:
+    inputs:
+      app-name:
+        required: true
+        type: string
+      app-target:
+        required: true
+        type: string
+      registry:
+        required: true
+        type: string
+      github-sha:
+        required: true
+        type: string
+    secrets:
+      k8s-config:
+        required: true
+
+jobs:
+  deploy-k8s:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        env:
+          CONFIG: ${{secrets.k8s-config}}
+          REGISTRY: ${{ inputs.registry }}
+          APP: ${{ inputs.app-name }}
+          APPTARGET: ${{inputs.app-target}}
+          SHA: ${{inputs.github-sha}}
+        run: |
+          curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+          chmod +x kubectl
+          mv kubectl /usr/local/bin/
+          cd ~
+          mkdir .kube
+          echo "$CONFIG" > .kube/config
+          kubectl set image deployment/$APP $APPTARGET=$REGISTRY:$GITHUB_SHA
+          kubectl rollout restart deployment/$app
