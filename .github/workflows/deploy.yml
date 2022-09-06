@@ -12,9 +12,6 @@ on:
       registry:
         required: true
         type: string
-      github-sha:
-        required: true
-        type: string
     secrets:
       k8s-config:
         required: true
@@ -30,7 +27,6 @@ jobs:
           REGISTRY: ${{ inputs.registry }}
           APP: ${{ inputs.app-name }}
           APPTARGET: ${{inputs.app-target}}
-          SHA: ${{inputs.github-sha}}
         run: |
           curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
           chmod +x kubectl
