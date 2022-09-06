@@ -12,9 +12,9 @@ on:
       registry:
         required: true
         type: string
-    secrets:
       k8s-config:
         required: true
+        type: string
 
 jobs:
   deploy-k8s:
@@ -23,7 +23,7 @@ jobs:
     steps:
       - name: Deploy
         env:
-          CONFIG: ${{secrets.k8s-config}}
+          CONFIG: ${{inputs.k8s-config}}
           REGISTRY: ${{ inputs.registry }}
           APP: ${{ inputs.app-name }}
           APPTARGET: ${{inputs.app-target}}
