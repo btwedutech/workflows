@@ -9,9 +9,14 @@ on:
       app-target:
         required: true
         type: string
-      registry:
+      # REGISTRY:
+      #   required: true
+      # k8s-config:
+      #   required: true
+    secrets: 
+      REGISTRY:
         required: true
-      k8s-config:
+      K8S_DEV: 
         required: true
 
 jobs:
@@ -19,18 +24,18 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy
-        env:
-          CONFIG: ${{inputs.k8s-config}}
-          REGISTRY: ${{ inputs.registry }}
-          APP: ${{ inputs.app-name }}
-          APPTARGET: ${{inputs.app-target}}
-        run: |
-          curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
-          chmod +x kubectl
-          mv kubectl /usr/local/bin/
-          cd ~
-          mkdir .kube
-          echo "$CONFIG" > .kube/config
-          kubectl set image deployment/$APP $APPTARGET=$REGISTRY:$GITHUB_SHA
-          kubectl rollout restart deployment/$app
+    - name: Deploy
+      env:
+        CONFIG: ${{inputs.k8s-config}}
+        REGISTRY: ${{ inputs.registry }}
+        APP: ${{ inputs.app-name }}
+        APPTARGET: ${{inputs.app-target}}
+      run: |
+        curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+        chmod +x kubectl
+        mv kubectl /usr/local/bin/
+        cd ~
+        mkdir .kube
+        echo "$K8S_DEV" > .kube/config
+        kubectl set image deployment/$APP $APPTARGET=$REGISTRY:$GITHUB_SHA
+        kubectl rollout restart deployment/$app
