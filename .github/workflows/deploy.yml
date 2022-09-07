@@ -9,14 +9,10 @@ on:
       app-target:
         required: true
         type: string
-      # REGISTRY:
-      #   required: true
-      # k8s-config:
-      #   required: true
     secrets: 
       REGISTRY:
         required: true
-      K8S_DEV: 
+      K8S_CONFIG: 
         required: true
 
 jobs:
@@ -26,7 +22,7 @@ jobs:
     steps:
     - name: Deploy
       env:
-        K8S_DEV: ${{secrets.K8S_DEV}}
+        K8S_CONFIG: ${{secrets.K8S_CONFIG}}
         REGISTRY: ${{ secrets.REGISTRY }}
         APP: ${{ inputs.app-name }}
         APPTARGET: ${{inputs.app-target}}
@@ -36,6 +32,6 @@ jobs:
         mv kubectl /usr/local/bin/
         cd ~
         mkdir .kube
-        echo "$K8S_DEV" > .kube/config
+        echo "$K8S_CONFIG" > .kube/config
         kubectl set image deployment/$APP $APPTARGET=$REGISTRY:$GITHUB_SHA
         kubectl rollout restart deployment/$APP
