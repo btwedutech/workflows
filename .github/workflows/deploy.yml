@@ -38,4 +38,4 @@ jobs:
         mkdir .kube
         echo "$K8S_DEV" > .kube/config
         kubectl set image deployment/$APP $APPTARGET=$REGISTRY:$GITHUB_SHA
-        kubectl rollout restart deployment/$app
+        kubectl rollout restart deployment/$APP
