@@ -9,6 +9,9 @@ on:
       app-target:
         required: true
         type: string
+      identifier:
+        required: true
+        type: string
     secrets: 
       REGISTRY:
         required: true
@@ -26,6 +29,7 @@ jobs:
         REGISTRY: ${{ secrets.REGISTRY }}
         APP: ${{ inputs.app-name }}
         APPTARGET: ${{inputs.app-target}}
+        IDENTIFIER: ${{inputs.identifier}}
       run: |
         curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
         chmod +x kubectl
@@ -33,5 +37,5 @@ jobs:
         cd ~
         mkdir .kube
         echo "$K8S_CONFIG" > .kube/config
-        kubectl set image deployment/$APP $APPTARGET=$REGISTRY:$GITHUB_SHA
+        kubectl set image deployment/$APP $APPTARGET=$REGISTRY:$IDENTIFIER
         kubectl rollout restart deployment/$APP
