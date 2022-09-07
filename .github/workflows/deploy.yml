@@ -26,8 +26,8 @@ jobs:
     steps:
     - name: Deploy
       env:
-        CONFIG: ${{inputs.k8s-config}}
-        REGISTRY: ${{ inputs.registry }}
+        K8S_DEV: ${{secrets.K8S_DEV}}
+        REGISTRY: ${{ secrets.REGISTRY }}
         APP: ${{ inputs.app-name }}
         APPTARGET: ${{inputs.app-target}}
       run: |
