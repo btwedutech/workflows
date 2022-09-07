@@ -11,10 +11,8 @@ on:
         type: string
       registry:
         required: true
-        type: string
       k8s-config:
         required: true
-        type: string
 
 jobs:
   deploy-k8s:
