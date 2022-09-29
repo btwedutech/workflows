@@ -1,4 +1,4 @@
-name: Deploy to Kube
+name: Deploy to Kube Cronjob
 
 on:
   workflow_call:
@@ -20,7 +20,7 @@ on:
 
 jobs:
   deploy-k8s:
-    name: Deploy to deployment
+    name: Deploy Cronjob
     runs-on: ubuntu-latest
     steps:
     - name: Deploy
@@ -37,5 +37,4 @@ jobs:
         cd ~
         mkdir .kube
         echo "$K8S_CONFIG" > .kube/config
-        kubectl set image deployment/$APP $APPTARGET=$REGISTRY:$TAG
-        kubectl rollout restart deployment/$APP
+        kubectl set image cronjob/$APP $APPTARGET=$REGISTRY:$TAG
