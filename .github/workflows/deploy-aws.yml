@@ -40,9 +40,6 @@ jobs:
         APPTARGET: ${{inputs.app-target}}
         TAG: ${{inputs.image-tag}}
       run: |
-        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-        unzip awscliv2.zip
-        ./aws/install
         curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.24.7/2022-10-31/bin/linux/amd64/kubectl
         chmod +x kubectl
         mv kubectl /usr/local/bin/
