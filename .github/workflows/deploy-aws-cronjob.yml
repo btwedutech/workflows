@@ -1,0 +1,49 @@
+name: Deploy to Kube AWS Cronjob
+
+on:
+  workflow_call:
+    inputs:
+      app-name:
+        required: true
+        type: string
+      app-target:
+        required: true
+        type: string
+      image-tag:
+        required: true
+        type: string
+    secrets: 
+      REGISTRY:
+        required: true
+      EKS_KEY: 
+        required: true
+      EKS_SECRET: 
+        required: true
+
+jobs:
+  deploy-k8s-eks-cron:
+    name: Deploy Cronjob
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{secrets.EKS_KEY}}
+        aws-secret-access-key: ${{secrets.EKS_SECRET}}
+        aws-region: ap-southeast-3
+    - name: Deploy
+      env:
+        REGISTRY: ${{ secrets.REGISTRY }}
+        APP: ${{ inputs.app-name }}
+        APPTARGET: ${{inputs.app-target}}
+        TAG: ${{inputs.image-tag}}
+      run: |
+        curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.24.7/2022-10-31/bin/linux/amd64/kubectl
+        chmod +x kubectl
+        mv kubectl /usr/local/bin/
+        cd ~
+        mkdir .kube
+        aws eks update-kubeconfig --region ap-southeast-3 --name production-clusters
+        kubectl set image cronjob/$APP $APPTARGET=$REGISTRY:$TAG
