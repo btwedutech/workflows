@@ -45,6 +45,6 @@ jobs:
         mv kubectl /usr/local/bin/
         cd ~
         mkdir .kube
-        aws eks update-kubeconfig --region ap-southeast-3 --name production-clusters
+        aws eks update-kubeconfig --region ap-southeast-3 --name btwedutech
         kubectl set image deployment/$APP $APPTARGET=$REGISTRY:$TAG
         kubectl rollout restart deployment/$APP
