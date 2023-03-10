@@ -1,3 +1,4 @@
+name: Package Vulnerability Scanning
 on: [push]
 
 jobs:
@@ -14,5 +15,4 @@ jobs:
           go install github.com/google/osv-scanner/cmd/osv-scanner@v1
       - name: Run OSV Scanner
         run: |
-          osv-scanner -r .
-      
+            [-f ./osv-config.toml] && osv-scanner -r --config=./osv-config.toml || osv-scanner -r
