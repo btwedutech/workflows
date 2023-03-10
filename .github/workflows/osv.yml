@@ -1,5 +1,5 @@
 name: Package Vulnerability Scanning
-on: [push]
+on: [workflow_call]
 
 jobs:
   osv-scanner:
