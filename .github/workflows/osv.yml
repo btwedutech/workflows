@@ -1,0 +1,18 @@
+on: [push]
+
+jobs:
+  osv-scanner:
+    runs-on: ubuntu-latest
+    name: OSV Scanner
+    container: golang:1.20.2-alpine3.17
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Prepare OSV Scanner
+        run: |
+          apk add --no-cache git
+          go install github.com/google/osv-scanner/cmd/osv-scanner@v1
+      - name: Run OSV Scanner
+        run: |
+          osv-scanner -r .
+      
