@@ -11,4 +11,4 @@ jobs:
         uses: actions/checkout@v3
       - name: Run OSV Scanner
         run: |
-            test -f ./osv-config.toml &&  osv-scanner -r --config=./osv-config.toml || osv-scanner -r
+            test -f ./osv-config.toml &&  osv-scanner --config=./osv-config.toml -r . || osv-scanner -r
