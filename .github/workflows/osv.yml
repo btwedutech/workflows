@@ -8,7 +8,7 @@ jobs:
     container: pandeptwidyaop/osv-scanner
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Run OSV Scanner
         run: |
             test -f ./osv-config.toml &&  osv-scanner --config=./osv-config.toml -r . || osv-scanner -r .
