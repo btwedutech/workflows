@@ -1,0 +1,51 @@
+name: Deploy to Kube GKE Cronjob
+
+on:
+  workflow_call:
+    inputs:
+      app-name:
+        required: true
+        type: string
+      app-target:
+        required: true
+        type: string
+      image-tag:
+        required: true
+        type: string
+    secrets: 
+      REGISTRY:
+        required: true
+      GKE_SA_KEY: 
+        required: true
+      GKE_CLUSTER_NAME: 
+        required: true
+      GKE_ZONE_NAME: 
+        required: true
+      GKE_PROJECT_ID: 
+        required: true
+
+jobs:
+  deploy-k8s-gke-cron:
+    name: Deploy Cronjob
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Authenticate Google Cloud
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: ${{ secrets.GKE_SA_KEY }}
+    - name: Configure GKE credentials
+      uses: google-github-actions/get-gke-credentials@v2
+      with:
+        cluster_name: ${{ secrets.GKE_CLUSTER_NAME }}
+        location: ${{ secrets.GKE_ZONE_NAME }}
+        project_id: ${{ secrets.GKE_PROJECT_ID }}
+    - name: Deploy
+      env:
+        REGISTRY: ${{ secrets.REGISTRY }}
+        APP: ${{ inputs.app-name }}
+        APPTARGET: ${{inputs.app-target}}
+        TAG: ${{inputs.image-tag}}
+      run: |
+        kubectl set image cronjob/$APP $APPTARGET=$REGISTRY:$TAG
