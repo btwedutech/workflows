@@ -5,7 +5,7 @@ jobs:
   osv-scanner:
     runs-on: ubuntu-latest
     name: OSV Scanner
-    container: pandeptwidyaop/osv-scanner
+    container: registry.btwazure.com/marvelousbtw/osv-scanner
     steps:
       - name: Checkout
         uses: actions/checkout@v4
