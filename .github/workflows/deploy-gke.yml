@@ -48,5 +48,9 @@ jobs:
         APPTARGET: ${{inputs.app-target}}
         TAG: ${{inputs.image-tag}}
       run: |
+        curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+        chmod +x kubectl
+        mv kubectl /usr/local/bin/
+        cd ~
         kubectl set image deployment/$APP $APPTARGET=$REGISTRY:$TAG
         kubectl rollout restart deployment/$APP
